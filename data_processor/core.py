@@ -1,5 +1,6 @@
 import pandas as pd
-import os 
+import os
+import gc
 
 # Dictionnaire des codes région avec leurs noms
 
@@ -562,6 +563,9 @@ for year in unique_years:
     # Exporter vers un fichier CSV
     patients_by_region_pathology.to_csv(f"../data/patients_by_region_pathology_{year}.csv", index=False, encoding="utf-8")
 
+    del patients_by_region_pathology
+    gc.collect()
+
     # Patients by department and Pathology Level 1 - Pathology Level 2 - Pathology Level 3
     patients_by_department_pathology = staged_data_year.groupby(["Department", "Pathology Level 1", "Pathology Level 2", "Pathology Level 3"])["Patient Count (top)"].sum().reset_index()
     # Ajouter les colonnes de département
@@ -574,12 +578,18 @@ for year in unique_years:
     # Exporter vers un fichier CSV
     patients_by_department_pathology.to_csv(f"../data/patients_by_department_pathology_{year}.csv", index=False, encoding="utf-8")
 
+    del patients_by_department_pathology
+    gc.collect()
+
     # Patients by sexe and Pathology Level 1 - Pathology Level 2 - Pathology Level 3
     patients_by_sexe_pathology = staged_data_year.groupby(["Gender", "Gender Label", "Pathology Level 1", "Pathology Level 2", "Pathology Level 3"])["Patient Count (top)"].sum().reset_index()
     patients_by_sexe_pathology['Pathology Level 1 Name'] = patients_by_sexe_pathology['Pathology Level 1'].map(pathologies_level1_short_names)
     patients_by_sexe_pathology['Pathology Level 2 Name'] = patients_by_sexe_pathology['Pathology Level 2'].map(pathologies_level2_short_names)
     patients_by_sexe_pathology['Pathology Level 3 Name'] = patients_by_sexe_pathology['Pathology Level 3'].map(pathologies_level3_short_names)
     patients_by_sexe_pathology.to_csv(f"../data/patients_by_sexe_pathology_{year}.csv", index=False, encoding="utf-8")
+
+    del patients_by_sexe_pathology
+    gc.collect()
 
     # Patients by age group and Pathology Level 1 - Pathology Level 2 - Pathology Level 
     patients_by_age_group_pathology = staged_data_year.groupby(["Age Group (5 years)", "Age Group Label", "Pathology Level 1", "Pathology Level 2", "Pathology Level 3"])["Patient Count (top)"].sum().reset_index()
@@ -589,5 +599,8 @@ for year in unique_years:
     patients_by_age_group_pathology['Pathology Level 3 Name'] = patients_by_age_group_pathology['Pathology Level 3'].map(pathologies_level3_short_names)
     # Exporting the result to a CSV file
     patients_by_age_group_pathology.to_csv(f"../data/patients_by_age_group_pathology_{year}.csv", index=False, encoding="utf-8")
+
+    del patients_by_age_group_pathology, staged_data_year
+    gc.collect()
 
 print("All data processed and saved in the folder 'data'.")

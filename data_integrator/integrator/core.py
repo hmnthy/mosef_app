@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 import datetime
+import gc
+import numpy as np
 
 # Répertoire contenant les fichiers raw
 current_year = datetime.datetime.now().year
@@ -52,6 +54,8 @@ try:
     # Lire le fichier par morceaux (chunks)
     for chunk in pd.read_csv(raw_file_path, sep=";", header=0, skipinitialspace=True, encoding="utf-8", dtype=dtype_dict, chunksize=chunk_size):
         chunks.append(chunk)
+        del chunk
+        gc.collect()
     # Concaténer les morceaux pour former un DataFrame complet
     raw_file = pd.concat(chunks)
 except Exception as e:
@@ -80,6 +84,7 @@ columns_mapping = {
 
 # Appliquer le renommage des colonnes au DataFrame
 raw_file.rename(columns=columns_mapping, inplace=True)
+raw_file = raw_file.astype(str).fillna("")  # Chuyển mọi giá trị thành chuỗi và thay thế NaN bằng chuỗi rỗng
 
 # Écriture des données transformées dans un fichier de staging
 try:
@@ -88,3 +93,6 @@ try:
 except Exception as e:
     print(f"Error writing staged file: {e}")
     exit(1)
+
+del raw_file
+gc.collect()
