@@ -1,0 +1,10 @@
+.venv/
+*.pyc
+log/
+data/
+archived/
+*.csv
+*.log
+__pycache__/
+
+
