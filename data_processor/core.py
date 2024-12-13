@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import gc
+import datetime
 
 # Dictionnaire des codes région avec leurs noms
 
@@ -526,9 +527,12 @@ pathologies_level3_short_names = {
 print("Create the folder 'Data'...")
 os.makedirs("../data", exist_ok=True)
 
+current_year = datetime.datetime.now().year
+staged_file_path = f"../archived/staged/staged_data_{current_year}.csv"
+
 # Charger les données du fichier staged_data.csv
 print("Loading staged data...")
-staged_data = pd.read_csv("../staged_data.csv", sep=",", header=0, skipinitialspace=True)
+staged_data = pd.read_csv(staged_file_path, sep=",", header=0, skipinitialspace=True)
 staged_data = staged_data.drop_duplicates()
 # staged_data = staged_data[staged_data["Region"] != 99]
 staged_data = staged_data.loc[
