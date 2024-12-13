@@ -4,7 +4,7 @@
 Clonez ce projet sur votre machine locale en exécutant la commande suivante :
    ```bash
    git clone https://github.com/hmnthy/mosef_app.git
-   cd linux_project
+   cd mosef_app
    ```
 2. Installation de Docker
    

@@ -28,7 +28,7 @@
 #!/bin/bash
 
 dt=$(date +%Y)
-FILE=../archived/raw/raw_data_$dt.csv
+FILE=../raw_data_$dt.csv
 
 log_message() {
     echo "$(date '+%Y-%m-%d %H:%M:%S') - $1"
