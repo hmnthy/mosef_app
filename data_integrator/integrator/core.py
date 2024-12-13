@@ -109,7 +109,7 @@ def memory_usage():
     return f"Memory Usage: {process.memory_info().rss / 1024 ** 2:.2f} MB"
 
 # Đường dẫn và cấu hình
-current_year = datetime.datetime.now().year
+current_year = 2024
 raw_files_dir = "../../archived/raw"
 staged_file_path = f"../../archived/staged/staged_data_{current_year}.csv"
 chunk_size = 5000  # Kích thước chunk tối ưu
@@ -155,16 +155,28 @@ dtype_dict = {
 # Hàm tìm file mới nhất trong thư mục raw
 def get_latest_raw_file(directory):
     try:
+        # Obtenir l'année actuelle
+        # Utilisation de la fonction datetime pour récupérer l'année au format AAAA
+        current_year = datetime.now().strftime("%Y")
+        
+        # Récupérer tous les fichiers dans le répertoire correspondant au modèle "raw_data_$année.csv"
+        # Les fichiers doivent commencer par "raw_data_année" et se terminer par ".csv"
         files = [
             os.path.join(directory, f)
             for f in os.listdir(directory)
-            if f.startswith("raw_data") and f.endswith(".csv")
+            if f.startswith(f"raw_data_{current_year}") and f.endswith(".csv")
         ]
+        
+        # Si aucun fichier correspondant n'est trouvé, lever une exception
         if not files:
-            raise FileNotFoundError("No raw_data files found in the directory.")
+            raise FileNotFoundError(f"Aucun fichier raw_data pour l'année {current_year} trouvé dans le répertoire.")
+        
+        # Retourner le fichier le plus récent en fonction de sa date de modification
         return max(files, key=os.path.getmtime)
+    
     except Exception as e:
-        raise Exception(f"Error finding latest raw file: {e}")
+        # Si une erreur survient, lever une exception avec un message détaillé
+        raise Exception(f"Erreur lors de la recherche du dernier fichier raw : {e}")
 
 # Lấy đường dẫn file raw mới nhất
 try:
